@@ -8,34 +8,29 @@ const id_Food = '8e59d3bc';
 const API_KEY_FOOD = `f459e28ce2872bed0fbe6481a6df3665`;
 cardsContainer.innerHTML = '';
 let recipesContainer = [];
-
-
-    
-    searchFoodSubmit.addEventListener('click', ()=>{
-        const filterArr = recipesContainer.q
-        if (filterArr === null) {
-            console.log('ok');
-        }else{
-
-            getMeals(filterArr);
-        }
-    })
+let meals = [];
+let name = '';
 
 
 
-async function getMeals(val) {
-    const URI = `https://api.edamam.com/search?q=${val}&app_id=${id}&app_key=${API_KEY}`;
+// myModal.addEventListener('shown.bs.modal', function () {
+// })
+
+
+async function getMeals() {
+   // const URI = `https://api.edamam.com/search?q=${val}&app_id=${id}&app_key=${API_KEY}`;
     const RANDOM_FOOD = `https://www.themealdb.com/api/json/v1/1/random.php`;
     const URI_FOOD = `https://api.edamam.com/api/food-database/v2/parser?nutrition-type=logging&ingr=red%20apple&app_id=${id_Food}&app_key=${API_KEY_FOOD}`;
 
     try {
         const response = await fetch(RANDOM_FOOD);
         recipesContainer = await response.json();
-        let meals = recipesContainer.meals[0];
-        randomMeal(meals);
-        console.log(meals);
-        
-	//fillCards(recipes)
+        meals.push(recipesContainer.meals[0])
+        console.log(recipesContainer);
+        currentMealId = recipesContainer.meals[0].idMeal;
+        console.log(currentMealId);
+        localStorage.setItem('recipe', JSON.stringify(meals));
+        randomMeal(meals)
     } catch (error) {
         console.log(error);
     }
@@ -46,49 +41,82 @@ async function getMeals(val) {
 
 
 function randomMeal(item) {
+  let itemm = item[item.length - 1];
     const ingredientes = [];
+    console.log(itemm);
     for (let i = 1; i < 20; i++) {
 
-        if (item[`strIngredient${i}`]) {
-            ingredientes.push(`${item[`strIngredient${i}`]}`);
-            ingredientes.push(`${item[`strMeasure1${i}`]}`);
+        if (itemm[`strIngredient${i}`]) {
+            ingredientes.push(`${itemm[`strIngredient${i}`]}`);
+            ingredientes.push(`${itemm[`strMeasure1${i}`]}`);
         }else{
             break;
         }
-    }
 
+        if (ingredientes[i].value === '' && ingredientes[i] === 'undefined') {
+           
+            console.log('ok');
+        }
+    }
+    const ingredientsTrimed = ingredientes.filter(ing => {
+       
+        return ing !== '' && ing !== 'undefined';
+    })
+
+            //ui staff 
     cardsContainer.innerHTML = `
     <article class="menu-item">
-    <img src="${item.strMealThumb}" alt=".." class="recipeImg">
+    <img src="${itemm.strMealThumb}" alt=".." class="recipeImg">
     <div class="item-info">
       <header>
-        <h4>${item.strMeal} <span class="text-white">Category:  ${item.strCategory}</span> </h4>
-        <h4 class="price">${item.strArea} </h4>
+        <h4 class='fw-bold shadow-sm  rounded'>${itemm.strMeal}</h4>
+         <h3 class="">Category : <span class='text-danger badge bg-dark'> ${itemm.strCategory}</span></h3>
+        <h4 class="price badge rounded-pill bg-success p-3 ">${itemm.strArea} </h4>
       </header>
-      <p class="item-text">${item.strInstructions}</p>
+      <p class="item-text">${itemm.strInstructions}</p>
+      <div class='d-flex justify-content-between'>
+      <button class='btn'>ingredients</button>
+      <a class='btn' href=${itemm.strSource} target='_blank'>Meal Source</a>
+      </div>
       <div class="menu-ingredients">
 
-      <i class='bx bx-caret-up close-ing'></i>
+     
+      <i class='bx bx-x close-ing'></i>
       <ul>
-      ${ingredientes.map(ing=> `
+      ${ingredientsTrimed.map(ing=> `
       <li class="list-item-ing">${ing}</li>
       ` ).join('')}
       </ul>
+</div>
+
+
       </div>
     </div>
-  </article>
+</article>
     `;
 
+
+    //images info 
     const ulRecipe = cardsContainer.querySelector('.menu-ingredients');
     let listItemIngs = cardsContainer.querySelectorAll(['.list-item-ing']);
-     let listArr = Array.from(listItemIngs);
-    console.log(listArr);
+    let listArr = Array.from(listItemIngs);
     listArr.filter(listItem => listItem.textContent !== undefined)
     const closeIng = cardsContainer.querySelector('.close-ing').addEventListener('click', ()=>{
-        ulRecipe.style.display = 'none';
+        ulRecipe.classList.remove('active')
     })
-    const imageRecipe = cardsContainer.querySelector('.recipeImg').addEventListener('click', ()=>{
-        ulRecipe.style.display = 'block';
+     const ingredientsBtn = cardsContainer.querySelector('.btn').addEventListener('click', (e) => {
+        console.log(e.target);
+        ulRecipe.classList.add('active');
     })
 }
+
+        //button function
+searchFoodSubmit.addEventListener('click', (e) => {
+    getMeals()
+})
+    
+    if (localStorage.getItem('recipe')) {
+        const rec = JSON.parse(localStorage.getItem('recipe'));
+        randomMeal(rec)
+        }
 

@@ -1,5 +1,5 @@
-$gradient: linear-gradient(to bottom, #868F96,  #596164);
-
+  $gradient: linear-gradient(to bottom, #487eb0,#40739e);
+  $primary : #ecf0f1;
 
 @mixin flex($dir) {
     display: flex;
@@ -8,16 +8,16 @@ $gradient: linear-gradient(to bottom, #868F96,  #596164);
 }
 
 *{
-    font-family: 'Lobster', Georgia, Times, serif; 
+    font-family:  Georgia, Times, serif; 
 }
 body{
     font-size: 18px;
     min-height: 100vh;
-    background-image: $gradient;
+    background: $gradient;
     background-repeat: no-repeat;
     background-size: 400%;
     animation: animateBg 10s linear alternate infinite;
-    font-family: 'Lobster', Georgia, Times, serif; 
+    font-family:  Georgia, Times, serif; 
     }
 
     @keyframes animateBg {
@@ -39,6 +39,7 @@ body{
 .title{
 margin: 1rem 0;
 padding: 1rem ;
+@include flex(column);
     & > h2{
         font-weight: bold;
         position: relative;
@@ -46,19 +47,23 @@ padding: 1rem ;
             content: '';
             position: absolute;
             top: 110%;
-            left: 45%;
-            background-color: yellowgreen;
-            height: 0.3rem;
-            width: 10%;
+            left: 0%;
+            background-color: #F97F51;
+            height: 1.3px;
+            width: 100%;
         }
+    }
+
+    & #searchFoodSubmit{
+        margin-top: 3rem;
+        margin-bottom: 0;
+        width: 50%;
     }
 }
 
 
 .grid{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 1rem;
+    @include flex(column);
     @media screen and (max-width: 800px) {
         grid-template-columns: auto;
     }
@@ -69,12 +74,12 @@ padding: 1rem ;
     margin: 3rem auto;
 
 & .menu-item{
+    width: 70%;
     @include flex(column);
     justify-content: center;
     position: relative;
-    
+    color: #dfe4ea;
     & > img{
-        border: 2px solid yellowgreen;
         border-radius: 8px;
         width: 100%;
         max-height: 30vh;
@@ -86,7 +91,7 @@ padding: 1rem ;
             & > header{
                 width: 100%;
                 @include flex(row);
-                justify-content: space-between;
+                justify-content: space-around;
                 position: relative;
                 &::after{
                     content: '';
@@ -98,30 +103,42 @@ padding: 1rem ;
                     width: 100%;
                     
                 }
+
+                @media screen and (max-width: 1000px) {
+                    @include flex(column);
+                    justify-content: space-between;
+
+                    & h4,h3{
+                        margin: 0.3rem 0;
+                    }
+                }
             }
 
                 & .item-text{
-                    color: rgba(0, 0, 0, 0.265);
+                    color: rgb(5, 3, 3);
                     padding: 1rem 0;
                 }
         }
         & .menu-ingredients{
-            position: absolute;
-            top: 0%;
+            position: fixed;
+            top: -120%;
             left: 0;
             width: 100%;
+            min-height: 100vh;
             height: 100%;
             background-color: white;
             @include flex(column);
-            display: none;
+            border-radius: 5px;
             justify-content: center;
             max-height: 50vh;
-            overflow-y: scroll;
+            color: black;
+            transition: all 1s ease-out;
             & ul{
-                align-self: start;
+                align-self: center;
             }
             & li{
-                list-style: disc;
+                list-style: decimal;
+                margin: 0.5rem 0;
                 
             }
             
@@ -130,11 +147,28 @@ padding: 1rem ;
                 right: 0;
                 top: 0%;
                 font-size: 3rem;
-                border:1px solid yellowgreen;
+                border:3px solid $primary;
                 cursor: pointer;
+                &:hover{
+                    color: $primary;
+                }
+            }
+
+            &.active{
+                top: 0%;
             }
         }
-
+        
+        & .btn{
+            border-radius: 4px;
+            outline: none;
+            border: none;
+            background-color: $primary;
+            margin: 0 1rem;
+            &:hover{
+                opacity: 0.8;
+            }
+        }
         @media screen and (max-width: 1000px) {
             @include flex(column);
         }
