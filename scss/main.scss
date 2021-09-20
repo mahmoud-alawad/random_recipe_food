@@ -32,6 +32,21 @@ body{
         }
     }
 
+
+    .spinner{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100vh;
+        height: 100%;
+        @include flex(column);
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        background-color: white;
+        
+    }
 .menu{
     width: 100%;
 }
@@ -158,7 +173,7 @@ padding: 1rem ;
                 top: 0%;
             }
         }
-        
+
         & .btn{
             border-radius: 4px;
             outline: none;
